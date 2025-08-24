@@ -1,0 +1,1 @@
+sudo docker run -d --name kibana -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://172.17.0.1:9200" docker.elastic.co/kibana/kibana:7.17.0

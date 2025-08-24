@@ -1,0 +1,11 @@
+group
+  - name: promehteus-rules
+    rules:
+      - name: example 
+        expr: xxxx
+        for: 5min
+        labels:
+          app: log
+        annotations:
+          summary: "CPU使用率超过80"
+          description:""

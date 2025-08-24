@@ -1,0 +1,15 @@
+#!/bin/bash
+##场景1：处理用户列表文件 有一个users.txt文件，内容如下：
+##john:1001:admin
+##mary:1002:user
+##bob:1003:user
+##alice:1004:admin
+#要求：提取所有admin用户的用户名
+
+file=$1
+awk -F':' '{
+    if($3=="admin"){
+        print $1
+    }
+
+}' "$file
