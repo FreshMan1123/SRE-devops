@@ -255,6 +255,9 @@ webhook是准入控制器，允许在api server处理资源请求的周期中，
 3. 存入etcd前，apiserver检查是否有注册的webconfigureconfiguration关注这个请求，如果触发变更型准入，则会将请求对象打包并传到你自己配置的webhook服务器。修改后将对象返回给api server
 4. 检查是否有校验型webhookconfiguretion关注这个请求，若有则将其发送到你的校验webhook server上，根据自定义逻辑进行判断并返回是否准入
 
+pod里的容器之间如果想实现共享数据应该怎么做
+设置volumes挂载，可以用empityDir临时存储或者hostpath挂载宿主机目录，再或者是配置configmap以及secret配置文件共享
+
 我们项目中经常需要在Pod之间共享数据，能跟我聊聊你在Kubernetes中是怎么处理这类需求的吗？
 
 你刚才提到使用PVC，那在实际项目中你更倾向于选择哪种Volume类型来满足这种共享需求？为什么？

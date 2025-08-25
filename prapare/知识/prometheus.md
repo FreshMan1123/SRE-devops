@@ -172,5 +172,8 @@ garafna有哪些常用的运维指标
  RPS是每秒服务器处理的请求数，包括http请求或者api网关等。
  QPS是每秒服务处理的查询数，一般用于数据库的查询，衡量数据库的读性能
 
+我想要监控redis和mysql该如何监控呢
+对于非云原生情况下，我们可以用redis exporter或者是mysql exporter来进行监控
+对于云原生环境下的话，我们可以用InnoDBCluster，它会自动帮我们采集mysql指标，而对于redis来说，我们可以使用deployemnt部署一下redis-exporter
 
-当你收到一个 "PrometheusTargetDown" 的告警时，你的排查思路是什么？
+vetermetrics的指标要怎么采集
