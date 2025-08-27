@@ -99,7 +99,7 @@ find 目录 -type f          # 找所有文件
 find 目录 -name "*.txt"    # 找.txt文件
 find 目录 -mtime +7        # 找7天前的文件
 find -size +10M -exec ls -lh {} +  #大于10Mb的文件
-
+ 
 最常用的grep参数
 # 基本用法
 grep "关键词" 文件          # 查找关键词
@@ -121,12 +121,12 @@ sort -nr 文件              # 数字降序
 然后再用sort + uniq -c + sort -nr进行统计
 tr -s '' '\n' | sort | uniq -c | sort -nr
 
-
+查找存在某个指定字符在文件中的行数
+grep -c "$char" file
 ### 变量和参数
 - `input_file=$1` - 如 `./xx.sh input`，将input这个文件赋给input_file
 - `IFS=` - IFS字符分隔符，将其临时设为空值，用于精准操纵文件
 - `(( ))` - 可兼容我们的运算符，同时会自动将我们的变量名转化为对应的$变量，更方便
-- `((num++))` - 也可以作为一个独立的命令用来对变量进行自增操作，但是`(( num++ ))`不可以，因为系统认为这不是个独立命令
 
 ### 条件判断
 - `-z` - 表示zero，为空判断，当字符串是空时为真
