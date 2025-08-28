@@ -1,3 +1,4 @@
 #!/bin/bash
 #shell命令 删除给定目录下的已“.log” 为结尾的文件，要求只能用一条指令
 
+find $1 -name "*.log" -delete
