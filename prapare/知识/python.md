@@ -12,6 +12,8 @@ str.isdigit()方法判断是不是字符串是不是由数字组成
 num=set()
 集合的填充方法
 num.add
+w
+
 
 如果定义一个非局部变量（nonlocal）
 def del_1(n,d,nums):
