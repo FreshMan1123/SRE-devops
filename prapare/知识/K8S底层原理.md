@@ -8,11 +8,18 @@ Deployment Controller → API Server → etcd
 客户端到api server建立http watch，使用长连接，api server与etcd同样也建立watch，api server是etcd客户端，外界服务由api server向etcd交互。
 watch机制使得k8s能实时监听资源变化，当watch建立，同时数据发生变化时，api server会向etcd写入数据，etcd通知api server数据有变化了，然后再向api server推送数据，api server推送给客户端
 
+客户端与apiserver的watch长连接可能会因为网络问题中断。当客户端重新发起watch时，它如何确保自己没有错过在连接中断期间发生的任何资源变更事件？
+通过resourceVersion来实现的，resourceVersion是全局记录etcd数据修改的版本号。当api server向客户端发送修改事件时，会随着附送一个resource version，假设此时客户端断联，则会从客户端最后一个接收到的resource version进行重传
+
 说说k8s的manager collector是怎么维护集群期望状态的
 通过list-watch机制维护集群期望状态，首先是启动时获取全量数据，使用list来向api server获取当前所有pod的状态并记录。然后是持续的增量数据，会往api server建立watch，然后持续监听集群状态的变化，当出现与期望状态不同时，进行矫正
 
 manager collector怎么矫正集群状态的
-通过调谐循环来矫正集群状态，首先是会跟api server建立watch，然后当有pod发生变化时，会往manager collector推送事件，manager collector通过api server查询 etcd对应事件的期望状态，并进行对比，若不符合则进行矫正
+通过调谐循环来矫正集群状态，首先是会跟api server建立watch，然后当有pod发生变化时，会往manager collector推送事件，manager collector接收到之后通过api server查询 etcd对应事件的期望状态以及集群最新的当前状态，并进行对比，若不符合则进行矫正
+
+你提到了调谐循环，那么Controller是如何避免重复调谐的？如果多个Controller同时处理同一个资源会怎样？
+1.controller操作具有幂等性，多次执行结果相同
+2.每个资源通常只有一个controller负责管理
 
 重新复述一个一个deployment创建的过程吧
 首先是 kubectl向api server发送创建请求，api server进行鉴权，并把数据存到etcd，然后manager collecotr接收到集群期望状态变化，发现与当前状态不一致，则拉起一个新的deployment，并通过拉起多个副本，将数据存到etcd中。然后因为scheduler watch 了api server，所以其会检测到变化并进行调度，调度到节点后，由kubele发送给容器运行时，容器运行时拉镜像开端口挂存储，再由CNI分配ip地址，最后kubelete将数据发给api server，api server再保存到etcd，此时就可以通过kubectl get deployment找到对应的deployment了
