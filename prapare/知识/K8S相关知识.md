@@ -276,6 +276,12 @@ iptables按照对应的规则进行流量转发是什么意思
 k8s回滚怎么做，可以回滚到某个特定的版本吗
 kubectl rollout实现回滚，可以使用--to-version来指定对应的版本
 
+underlay模式下CNI分配的ip，究竟是网卡的ip，还是CNI网络插件的ip
+云下分配的是ip池的ip，云上分配的是VPC子网的ip
+
+pod里的容器之间是怎么实现网络共享的
+pod有一个pause基础设施容器，pod里面的所有容器共享pause的网络命名空间，共享ip已经端口范围，并通过localhost+端口号实现网络通信
+
 
 
 我们项目中经常需要在Pod之间共享数据，能跟我聊聊你在Kubernetes中是怎么处理这类需求的吗？

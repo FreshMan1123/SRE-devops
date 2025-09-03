@@ -176,4 +176,8 @@ garafna有哪些常用的运维指标
 对于非云原生情况下，我们可以用redis exporter或者是mysql exporter来进行监控
 对于云原生环境下的话，我们可以用InnoDBCluster，它会自动帮我们采集mysql指标，而对于redis来说，我们可以使用deployemnt部署一下redis-exporter
 
-vetermetrics的指标要怎么采集
+promehteus高效查询是怎么实现的
+1. 按照时间戳分块存储
+2， 倒排索引，由标签定求交集得时间序列。
+3. 多层缓存+数据压缩
+4. 并发控制，允许多个时间序列并行处理
