@@ -24,6 +24,11 @@ manager collector怎么矫正集群状态的
 重新复述一个一个deployment创建的过程吧
 首先是 kubectl向api server发送创建请求，api server进行鉴权，并把数据存到etcd，然后manager collecotr接收到集群期望状态变化，发现与当前状态不一致，则拉起一个新的deployment，并通过拉起多个副本，将数据存到etcd中。然后因为scheduler watch 了api server，所以其会检测到变化并进行调度，调度到节点后，由kubele发送给容器运行时，容器运行时拉镜像开端口挂存储，再由CNI分配ip地址，最后kubelete将数据发给api server，api server再保存到etcd，此时就可以通过kubectl get deployment找到对应的deployment了
 
+etcd事件主要有哪些
+1. put事件，资源或者更新创建时触发
+2. delete事件，删除资源时触发
+3. watch事件，资源变化时触发
+
 manager controller 有几种
 deployment collertor，statefulset controller，daemonset controller，node controller，service controller等等，凡是需要维护期望状态的其实都有controller
 
