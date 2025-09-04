@@ -15,7 +15,7 @@ watch机制使得k8s能实时监听资源变化，当watch建立，同时数据�
 通过list-watch机制维护集群期望状态，首先是启动时获取全量数据，使用list来向api server获取当前所有pod的状态并记录。然后是持续的增量数据，会往api server建立watch，然后持续监听集群状态的变化，当出现与期望状态不同时，进行矫正
 
 manager collector怎么矫正集群状态的
-通过调谐循环来矫正集群状态，首先是会跟api server建立watch，然后当有pod发生变化时，会往manager collector推送事件，manager collector接收到之后通过api server查询 etcd对应事件的期望状态以及集群最新的当前状态，并进行对比，若不符合则进行矫正
+通过调谐循环来矫正集群状态，首先是会跟api server建立watch，然后当有pod发生变化时，会往manager collector推送事件，manager collector接收到之后通过api server查询 etcd对应事件的期望状态以及集群最新的当前状态，并进行对比，若不符合则进行矫正。具体矫正是manager controller向api server发送命令，api server向kubelete发送命令，kubleet执行
 
 你提到了调谐循环，那么Controller是如何避免重复调谐的？如果多个Controller同时处理同一个资源会怎样？
 1.controller操作具有幂等性，多次执行结果相同
@@ -43,6 +43,8 @@ deployment collertor，statefulset controller，daemonset controller，node cont
 raft算法是什么
 数据一致性算法，有一个leader和多个follower，leader将数据往follower写入，当多数follower确认后提交返回client。当leader宕机时，follower会进行选举，选出新的leader
 
+在etcd的Raft算法中，如果集群有5个节点，最多能容忍几个节点故障？为什么？
+最少必须要有过半节点存活，也就是三个节点存活，因为raft的leader选举机制，是要靠投票选择leader的，只有票数过半时才能选出leader，而假设存活节点不过半就选不出来，，所以只能容忍两个节点故障
 
 CSI插件是什么
 用于连接k8s和各个存储系统的容器存储接口标准
@@ -61,3 +63,6 @@ pv的多种访问模式分别有哪些，代表什么
 
 多副本情况下，是pvc根据模板名称加pod名称创建pvc并绑定pv吗
 在deployment下，多个副本共用一个pvc。statefulset下，多个副本c根据模板名称加pod名称创建pvc并绑定pv
+
+kubelete的作用是什么
+kubelete是工作节点上的客户端，是api server命令的执行者。比如说当manager collector发现与期望状态不一致时，manager collector向api server发送指令，kubelete接受指令并进行处理
