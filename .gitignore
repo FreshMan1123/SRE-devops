@@ -5,5 +5,5 @@ prapare/简历/
 prapare/K8S告警转发平台.md
 prapare/安卓自动化打包.md
 prapare/巡检程序.md
-./.gitignore
-./规划
+.gitignore
+规划
