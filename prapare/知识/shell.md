@@ -106,6 +106,13 @@ wc -c 统计总字符数
 拆分某个文件中单词的方法
 cat "$line" |  tr -s ' ' '\n'
 
+关于在find中一次找多个种类文件的方法
+-o 表示or，\(以及\)表示分组条件转义
+find . \(-name "*.log" -o "*.tmp"\)
+
+扫描端口
+nc -z -w1 "$ip" "$port"
+
 最常用的find参数
 # 基本用法
 find 目录 -type f          # 找所有文件
